@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="description" content="Ceci est une PWA">
+		<meta name="theme-color" content="#669900">
+		<link rel="manifest" href="manifest.json">
+		<title>PWA</title>
+		
+		<style>
+			<!-- Le style directement in inline pour voir au plus tôt un premier affichage -->
+			body{
+				margin: 0;
+			}
+		</style>
+		
+		<!-- On lance déjà une requête en "preload" pour avoir le style en cache et le charger le plus vite possible après que le premier affichage soit fait -->
+		<link rel="preload" href="styles/style.css" as="style">
+	</head>
+	<body>
+		<h1>Car il faut un titre !</h1>
+		
+		<script src="js/script.js"></script>
+		<script>
+		/****************
+			Après le charchement de la page, on cherche tous les styles préchargés et on les transforme en style valide 
+		****************/
+			document.querySelectorAll('[rel="preload"][as="style"]').forEach(function(e){
+				var s = document.createElement('link');
+				s.rel = "stylesheet";
+				s.href = e.href;
+				document.head.appendChild(s);
+			});
+		/****************/
+		
+		/****************
+			Faire que ça marche hors ligne.
+		****************/
+			/* 
+				Ceci n'est utile que pour tester si ça fonctionne, sinon autant utiliser ce qui n'est pas en commentaire.
+			*/
+			
+			/*if('serviceWorker' in navigator){
+				console.log('CLIENT: service worker registration in progress.');
+				navigator.serviceWorker.register('https://cdn.css-tricks.com/service-worker.js').then(function() {
+					console.log('CLIENT: service worker registration complete.');
+				}, function() {
+					console.log('CLIENT: service worker registration failure.');
+				});
+			}else{
+				console.log('CLIENT: service worker is not supported.');
+			}*/
+			
+			if('serviceWorker' in navigator){
+				navigator.serviceWorker.register('sw.js');
+			}
+			
+		/****************/
+		</script>
+	</body>
+</html>
